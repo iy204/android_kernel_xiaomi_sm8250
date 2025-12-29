@@ -7,4 +7,4 @@ config TOUCHSCREEN_ST_FTS_V521_SPI
 	  If unsure, say N.
 
 	  To compile this driver as a module, choose M here: the
-	  module will be called fts_touch_spi.
+
