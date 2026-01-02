@@ -46,7 +46,7 @@ This kernel stands on the shoulders of giants, combining contributions from mult
 4. 支持 EROFS  
 5. zRAM 支持 LZ4、LZ4HC、lz4k_oplus、LZ4KD、ZSTD 等压缩算法  
 6. 向后移植 5.10 BPF(支持安卓 16)  
-7. 触摸屏驱动、相机驱动、音频驱动使用小米版本(来自 UtsavBalar1231's repo), 为 `lmi`(Redmi K30 Pro/POCO F2 Pro) 的触摸屏驱动添加了双击亮屏节点  
+7. 触摸屏驱动、相机驱动、音频驱动、GPU/DRM/MSM 驱动使用小米版本(来自 UtsavBalar1231's repo 和 MiCode), 为 `lmi`(Redmi K30 Pro/POCO F2 Pro) 的触摸屏驱动添加了双击亮屏节点  
 8. 修复[电量卡在 1% 的问题](https://github.com/liyafe1997/Xiaomi-fix-battery-one-percent)，并且支持解容  
 
 **English:**  
@@ -64,7 +64,7 @@ Below are some of the key features:
 4. Support for EROFS  
 5. zRAM with support for multiple compression algorithms, including LZ4, LZ4HC, lz4k_oplus, LZ4KD, and ZSTD  
 6. Backported BPF from Linux 5.10 (Android 16 compatible)  
-7. Touchscreen, camera, and audio drivers use Xiaomi-specific implementations (sourced from UtsavBalar1231’s repository); additionally, a double-tap-to-wake node has been added to the touchscreen driver for `lmi` (Redmi K30 Pro / POCO F2 Pro)  
+7. Touchscreen, camera, audio, and GPU/DRM/MSM drivers use Xiaomi-specific implementations (sourced from UtsavBalar1231’s repository and MiCode); additionally, a double-tap-to-wake node has been added to the touchscreen driver for `lmi` (Redmi K30 Pro / POCO F2 Pro)  
 8. Fixes [the issue where the battery percentage gets stuck at 1%](https://github.com/liyafe1997/Xiaomi-fix-battery-one-percent), and supports recognizing higher-capacity replacement batteries  
 
 ---
