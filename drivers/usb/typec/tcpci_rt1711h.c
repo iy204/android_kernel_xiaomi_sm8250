@@ -179,6 +179,26 @@ out:
 	return tcpci_irq(chip->tcpci);
 }
 
+static int rt1711h_init_alert(struct rt1711h_chip *chip,
+			      struct i2c_client *client)
+{
+	int ret;
+
+	/* Disable chip interrupts before requesting irq */
+	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
+	if (ret < 0)
+		return ret;
+
+	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
+					rt1711h_irq,
+					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+					dev_name(chip->dev), chip);
+	if (ret < 0)
+		return ret;
+	enable_irq_wake(client->irq);
+	return 0;
+}
+
 static int rt1711h_sw_reset(struct rt1711h_chip *chip)
 {
 	int ret;
@@ -217,11 +237,6 @@ static int rt1711h_probe(struct i2c_client *client,
 {
 	int ret;
 	struct rt1711h_chip *chip;
-	const u16 alert_mask = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_DISCARDED |
-			       TCPC_ALERT_TX_FAILED | TCPC_ALERT_RX_HARD_RST |
-			       TCPC_ALERT_RX_STATUS | TCPC_ALERT_POWER_STATUS |
-			       TCPC_ALERT_CC_STATUS | TCPC_ALERT_RX_BUF_OVF |
-			       TCPC_ALERT_FAULT;
 
 	ret = rt1711h_check_revision(client);
 	if (ret < 0) {
@@ -245,8 +260,7 @@ static int rt1711h_probe(struct i2c_client *client,
 	if (ret < 0)
 		return ret;
 
-	/* Disable chip interrupts before requesting irq */
-	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
+	ret = rt1711h_init_alert(chip, client);
 	if (ret < 0)
 		return ret;
 
@@ -256,20 +270,6 @@ static int rt1711h_probe(struct i2c_client *client,
 	chip->tcpci = tcpci_register_port(chip->dev, &chip->data);
 	if (IS_ERR_OR_NULL(chip->tcpci))
 		return PTR_ERR(chip->tcpci);
-
-	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
-					rt1711h_irq,
-					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
-					dev_name(chip->dev), chip);
-	if (ret < 0)
-		return ret;
-
-	/* Enable alert interrupts */
-	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, alert_mask);
-	if (ret < 0)
-		return ret;
-
-	enable_irq_wake(client->irq);
 
 	return 0;
 }
