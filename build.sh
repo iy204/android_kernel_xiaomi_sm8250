@@ -100,6 +100,9 @@ else
     echo "KSU is disabled"
 fi
 
+echo "Integrate Baseband-guard"
+curl -LSs "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
+
 
 echo "Cleaning..."
 
