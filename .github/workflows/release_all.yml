@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         # 对应 README 中的支持设备列表
-        device: [psyche, umi, munch, lmi, cmi, cas, apollo, alioth, elish, enuma, dagu, pipa]
+        device: [psyche, thyme, umi, munch, lmi, cmi, cas, apollo, alioth, elish, enuma, dagu, pipa]
         ksu_enabled: [true, false]
 
     name: Build ${{ matrix.device }} (${{ matrix.ksu_enabled && 'KSU' || 'NoKSU' }})
