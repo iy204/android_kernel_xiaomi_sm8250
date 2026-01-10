@@ -20,14 +20,14 @@ The kernel source code is still under development and may cause some unpredictab
 
 ## 简介 / Introduction
 **中文:**  
-该 repo 基于 [LineageOS/android_kernel_xiaomi_sm8250](https://github.com/LineageOS/android_kernel_xiaomi_sm8250) 的 `lineage-23` 分支。HyperOS/MIUI 所需的代码及部分设备所需驱动是对照着 [Strawing 的仓库](https://github.com/liyafe1997/kernel_xiaomi_sm8250_mod) 的提交记录扣的，它们来自 [UtsavBalar1231 的仓库](https://github.com/UtsavBalar1231/kernel_xiaomi_sm8250) 和 [Xiaomi_Kernel_OpenSource](https://github.com/MiCode/Xiaomi_Kernel_OpenSource)。不支持 `thyme` (Xiaomi 10S)。  
+该 repo 基于 [LineageOS/android_kernel_xiaomi_sm8250](https://github.com/LineageOS/android_kernel_xiaomi_sm8250) 的 `lineage-23` 分支。HyperOS/MIUI 所需的代码及部分设备所需驱动是对照着 [Strawing 的仓库](https://github.com/liyafe1997/kernel_xiaomi_sm8250_mod) 的提交记录扣的，它们来自 [UtsavBalar1231 的仓库](https://github.com/UtsavBalar1231/kernel_xiaomi_sm8250) 和 [Xiaomi_Kernel_OpenSource](https://github.com/MiCode/Xiaomi_Kernel_OpenSource)。  
 
 这套源码相当于踩在巨人们的肩膀上，集百家之长，尽量使内核变得更好用。  
 
 **English:**  
 This repository is based on the `lineage-23` branch of [LineageOS/android_kernel_xiaomi_sm8250](https://github.com/LineageOS/android_kernel_xiaomi_sm8250).
 
-Code required for HyperOS/MIUI support, as well as some device-specific drivers, was selectively cherry-pickedby comparing commit histories from [Strawing's repo](https://github.com/liyafe1997/kernel_xiaomi_sm8250_mod), which in turn sources changes from [UtsavBalar1231's repo](https://github.com/UtsavBalar1231/kernel_xiaomi_sm8250) and [Xiaomi_Kernel_OpenSource](https://github.com/MiCode/Xiaomi_Kernel_OpenSource). Doesn't support `thyme` (Xiaomi 10S).  
+Code required for HyperOS/MIUI support, as well as some device-specific drivers, was selectively cherry-pickedby comparing commit histories from [Strawing's repo](https://github.com/liyafe1997/kernel_xiaomi_sm8250_mod), which in turn sources changes from [UtsavBalar1231's repo](https://github.com/UtsavBalar1231/kernel_xiaomi_sm8250) and [Xiaomi_Kernel_OpenSource](https://github.com/MiCode/Xiaomi_Kernel_OpenSource).  
 
 This kernel stands on the shoulders of giants, combining contributions from multiple upstreams to make it as practical and well-rounded as possible.  
 
@@ -103,6 +103,7 @@ Join ApartTUSITU's QQ Group: [700675046](https://qm.qq.com/q/Md7nXA3Toa).
 | 设备代号 / Codename  | 设备名称 / Device Name            |
 |---------------------|-----------------------------------|
 | psyche              | Xiaomi 12X                        |
+| thyme               | Xiaomi 10S                        |
 | umi                 | Xiaomi 10                         |
 | munch               | Redmi K40S / POCO F4              |
 | lmi                 | Redmi K30 Pro / POCO F2 Pro       |
