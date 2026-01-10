@@ -39,14 +39,6 @@ jobs:
           wget -q https://github.com/ZyCromerZ/Clang/releases/download/15.0.7-20251111-release/Clang-15.0.7-20251111.tar.gz
           tar -zxvf Clang-15.0.7-20251111.tar.gz
 
-      - name: Setup Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ccache_mikernel
-          key: ${{ matrix.device }}-${{ matrix.ksu_enabled }}-ccache-${{ github.sha }}
-          restore-keys: |
-            ${{ matrix.device }}-${{ matrix.ksu_enabled }}-ccache-
-
       - name: Run Build Script
         # 调用脚本，自动生成 AOSP 和 MIUI 两个版本的 Zip
         run: |
@@ -98,12 +90,13 @@ jobs:
             
             - **构建日期 / Build Date:** ${{ env.BUILD_DATE }}
             - **提交哈希 / Commit SHA:** `${{ env.GIT_SHA }}`
-            - **包含设备 / Devices:** psyche, umi, munch, lmi, cmi, cas, apollo, alioth, elish, enuma, dagu, pipa
+            - **包含设备 / Devices:** psyche, thyme, umi, munch, lmi, cmi, cas, apollo, alioth, elish, enuma, dagu, pipa
             
             ---
-            **注意 / Note:** - MIUI 用户请刷取文件名包含 `MIUI` 的版本。
-            - AOSP 用户请刷取文件名包含 `AOSP` 的版本。
-            - 支持 ReSukiSU 和 SuSFS 的版本标有 `SukiSU-SUSFS`。
+            **分类指南 / Instruction:**
+            - **MIUI**: 适用于小米官方或基于小米官方修改的 ROM。
+            - **AOSP**: 适用于类原生 ROM (LineageOS, Pixel Experience 等)。
+            - **SukiSU-SUSFS**: 已集成 ReSukiSU 和 SuSFS 补丁。
           files: all_kernels/*.zip
           draft: false
           prerelease: false
