@@ -100,6 +100,10 @@ else
     echo "KSU is disabled"
 fi
 
+echo "Integrating Baseband-guard..."
+curl -LSs "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
+sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/selinux/selinux,baseband_guard/ } }' security/Kconfig
+
 
 echo "Cleaning..."
 
