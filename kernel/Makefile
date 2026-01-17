@@ -150,6 +150,8 @@ else ifeq ($(CONFIG_MACH_XIAOMI_MUNCH),y)
 $(obj)/config_data.gz: arch/arm64/configs/munch_stock-defconfig FORCE
 else ifeq ($(CONFIG_MACH_XIAOMI_PSYCHE),y)
 $(obj)/config_data.gz: arch/arm64/configs/psyche_stock-defconfig FORCE
+else ifeq ($(CONFIG_MACH_XIAOMI_THYME),y)
+$(obj)/config_data.gz: arch/arm64/configs/thyme_stock-defconfig FORCE
 else ifeq ($(CONFIG_MACH_XIAOMI_UMI),y)
 $(obj)/config_data.gz: arch/arm64/configs/umi_stock-defconfig FORCE
 else ifeq ($(CONFIG_MACH_XIAOMI_PIPA),y)
