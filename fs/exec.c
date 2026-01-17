@@ -62,11 +62,11 @@
 #include <linux/oom.h>
 #include <linux/compat.h>
 #include <linux/vmalloc.h>
-#ifdef CONFIG_PERF_HUMANTASK
-#include <linux/sched.h>
-#endif
 #ifdef CONFIG_KSU_SUSFS
 #include <linux/susfs_def.h>
+#endif
+#ifdef CONFIG_PERF_HUMANTASK
+#include <linux/sched.h>
 #endif
 
 #include <linux/uaccess.h>
