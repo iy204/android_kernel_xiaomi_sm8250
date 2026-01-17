@@ -30,12 +30,12 @@ on:
 
 jobs:
   build:
-    name: Build Kernel for ${{ inputs.device }}
+    name: Build Kernel for ${{ inputs.device }} (${{ ( github.event.inputs.ksu == 'true' && 'KSU' ) || 'NoKSU' }})
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Source
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 1 # 需要完整的 commit 历史来生成版本号
 
@@ -55,7 +55,7 @@ jobs:
         sudo apt-get install -y gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
     - name: Setup Cache (ccache)
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/ccache_mikernel
         key: kernel-ccache-${{ inputs.device }}-${{ github.run_id }}
@@ -84,8 +84,8 @@ jobs:
         fi
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
-        name: Kernel-${{ inputs.device }}-${{ inputs.ksu && 'KSU' || 'NoKSU' }}-${{ github.run_number }}
+        name: Kernel-${{ inputs.device }}-${{ ( github.event.inputs.ksu == 'true' && 'KSU' ) || 'NoKSU' }}-${{ github.run_number }}
         path: ./*.zip
         if-no-files-found: error

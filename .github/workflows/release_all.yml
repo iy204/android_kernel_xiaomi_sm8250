@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -51,9 +51,9 @@ jobs:
 
       - name: Upload Local Artifacts
         # 将生成的 Zip 暂时存储到 GitHub 暂存区
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: kernel-artifacts-${{ matrix.device }}-${{ matrix.ksu_enabled }}
+          name: Kernel-artifacts-${{ matrix.device }}-${{ matrix.ksu_enabled && 'KSU' || 'NoKSU' }}
           path: ./*.zip
 
   release:
@@ -61,11 +61,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download All Artifacts
         # 下载之前所有矩阵任务生成的 Zip 文件
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: all_kernels
           pattern: kernel-artifacts-*
