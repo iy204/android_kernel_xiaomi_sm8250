@@ -132,7 +132,7 @@ if [ $KSU_ENABLE -eq 1 ]; then
     -e KSU_SUSFS_OPEN_REDIRECT \
     -e KSU_SUSFS_SUS_MAP \
     -e THREAD_INFO_IN_TASK \
-    -d KPM
+    -e KPM
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -155,15 +155,15 @@ rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/
 
 # Patch for SukiSU KPM support. 
-# if [ $KSU_ENABLE -eq 1 ]; then
-#     cd out/arch/arm64/boot/
-#     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.2/patch_linux
-#     chmod +x patch_linux
-#     ./patch_linux
-#     rm Image
-#     mv oImage Image
-#     cd -
-# fi
+if [ $KSU_ENABLE -eq 1 ]; then
+    cd out/arch/arm64/boot/
+    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.2/patch_linux
+    chmod +x patch_linux
+    ./patch_linux
+    rm Image
+    mv oImage Image
+    cd -
+fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/
 cp out/arch/arm64/boot/dtb anykernel/kernels/
@@ -266,7 +266,7 @@ if [ $KSU_ENABLE -eq 1 ]; then
     -e KSU_SUSFS_OPEN_REDIRECT \
     -e KSU_SUSFS_SUS_MAP \
     -e THREAD_INFO_IN_TASK \
-    -d KPM
+    -e KPM
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -323,15 +323,15 @@ rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/
 
 # Patch for SukiSU KPM support. 
-# if [ $KSU_ENABLE -eq 1 ]; then
-#     cd out/arch/arm64/boot/
-#     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.2/patch_linux
-#     chmod +x patch_linux
-#     ./patch_linux
-#     rm Image
-#     mv oImage Image
-#     cd -
-# fi
+if [ $KSU_ENABLE -eq 1 ]; then
+    cd out/arch/arm64/boot/
+    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.2/patch_linux
+    chmod +x patch_linux
+    ./patch_linux
+    rm Image
+    mv oImage Image
+    cd -
+fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/
 cp out/arch/arm64/boot/dtb anykernel/kernels/
