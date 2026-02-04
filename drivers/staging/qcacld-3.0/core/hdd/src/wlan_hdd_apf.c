@@ -318,7 +318,7 @@ fail:
 static int
 hdd_enable_disable_apf(struct hdd_adapter *adapter, bool apf_enable)
 {
-#ifndef CONFIG_BOARD_XIAOMI
+#ifndef CONFIG_MACH_XIAOMI_XIAOMI
 	QDF_STATUS status;
 
 	status = sme_set_apf_enable_disable(hdd_adapter_get_mac_handle(adapter),
