@@ -2,6 +2,7 @@
 /*
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
  * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
  */
 
 #include <linux/delay.h>
@@ -17,8 +18,6 @@
 #include "dsi_mi_feature.h"
 #include "dsi_display.h"
 #include "xiaomi_frame_stat.h"
-#include "sde_dbg.h"
-#include "dsi_mi_feature.h"
 
 /**
  * topology is currently defined by a set of following 3 values:
@@ -356,7 +355,6 @@ int dsi_panel_trigger_esd_attack(struct dsi_panel *panel)
 
 	if (gpio_is_valid(r_config->reset_gpio)) {
 		gpio_set_value(r_config->reset_gpio, 0);
-		SDE_EVT32(SDE_EVTLOG_FUNC_CASE1);
 		DSI_INFO("GPIO pulled low to simulate ESD\n");
 		return 0;
 	}
@@ -529,9 +527,8 @@ static int dsi_panel_power_off(struct dsi_panel *panel)
 	if (gpio_is_valid(panel->reset_config.disp_en_gpio))
 		gpio_set_value(panel->reset_config.disp_en_gpio, 0);
 
-	if (panel->mi_cfg.panel_id == 0x4C334100420200) {
+	if (panel->mi_cfg.panel_id == 0x4C334100420200)
 		mdelay(2);
-	}
 
 	if (panel->mi_cfg.is_tddi_flag) {
 		if (!panel->mi_cfg.tddi_doubleclick_flag || panel->mi_cfg.panel_dead_flag) {
@@ -615,6 +612,7 @@ int dsi_panel_tx_cmd_set(struct dsi_panel *panel,
 	cmds = mode->priv_info->cmd_sets[type].cmds;
 	count = mode->priv_info->cmd_sets[type].count;
 	state = mode->priv_info->cmd_sets[type].state;
+
 	SDE_EVT32(type, state, count);
 	DSI_INFO("dsi_panel_tx_cmd_set cmds(%d)\n", type);
 	if (count == 0) {
@@ -804,18 +802,23 @@ int dsi_panel_update_backlight(struct dsi_panel *panel,
 		DSI_ERR("failed to update dcs backlight:%d\n", bl_lvl);
 
 	if (mi_cfg->local_hbm_enabled) {
-		if (bl_lvl > 2047 && mi_cfg->dim_fp_dbv_max_in_hbm_flag == false) {
-			dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_DIM_FP_DBV_MAX_IN_HBM);
+		if (bl_lvl > 2047 &&
+		    mi_cfg->dim_fp_dbv_max_in_hbm_flag == false) {
+			dsi_panel_tx_cmd_set(
+				panel, DSI_CMD_SET_MI_DIM_FP_DBV_MAX_IN_HBM);
 			mi_cfg->dim_fp_dbv_max_in_hbm_flag = true;
 			DSI_INFO("set DSI_CMD_SET_MI_DIM_FP_DBV_MAX to hbm\n");
-		} else if (bl_lvl <= 2047 && mi_cfg->dim_fp_dbv_max_in_hbm_flag == true) {
-			dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_DIM_FP_DBV_MAX_IN_NORMAL);
+		} else if (bl_lvl <= 2047 &&
+			   mi_cfg->dim_fp_dbv_max_in_hbm_flag == true) {
+			dsi_panel_tx_cmd_set(
+				panel, DSI_CMD_SET_MI_DIM_FP_DBV_MAX_IN_NORMAL);
 			mi_cfg->dim_fp_dbv_max_in_hbm_flag = false;
-			DSI_INFO("set DSI_CMD_SET_MI_DIM_FP_DBV_MAX to normal\n");
+			DSI_INFO(
+				"set DSI_CMD_SET_MI_DIM_FP_DBV_MAX to normal\n");
 		}
-		if(panel->mi_cfg.local_hbm_cur_status) {
+
+		if (panel->mi_cfg.local_hbm_cur_status)
 			mi_dsi_panel_set_fod_brightness(dsi, bl_lvl);
-		}
 	}
 	return rc;
 }
@@ -899,7 +902,6 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 
 	DSI_INFO("backlight type:%d lvl:%d\n", bl->type, bl_lvl);
 
-
 	/* lmi panel must restore to last_bl_level to avoid flash high
 	 * brightness white exiting app lock with DC on (MIUI-1755728),
 	 * must make sure last_bl_level is correct. */
@@ -920,11 +922,13 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 		return rc;
 	}
 
-	if (0 == bl_lvl && (panel->host_config.cphy_strength || panel->mi_cfg.panel_id == 0x4C38314100420400 || 
-		panel->mi_cfg.panel_id == 0x4D38324100360200 || panel->mi_cfg.panel_id == 0x4D38324100420200)){
+	if (0 == bl_lvl && (panel->host_config.cphy_strength ||
+			    panel->mi_cfg.panel_id == 0x4C38314100420400 ||
+			    panel->mi_cfg.panel_id == 0x4D38324100360200 ||
+			    panel->mi_cfg.panel_id == 0x4D38324100420200)) {
 		DSI_INFO("set insert black \n");
 		dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_INSERT_BLACK);
-		usleep_range((6 * 1000),(6 * 1000) + 10);
+		usleep_range((6 * 1000), (6 * 1000) + 10);
 	}
 
 	switch (bl->type) {
@@ -938,15 +942,24 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 		break;
 	case DSI_BACKLIGHT_DCS:
 		if (mi_cfg->fod_backlight_flag) {
-			DSI_INFO("fod_backlight_flag set, skip set backlight %d\n", bl_lvl);
+			DSI_INFO(
+				"fod_backlight_flag set, skip set backlight %d\n",
+				bl_lvl);
 		} else {
 			if (mi_cfg->hbm_51_ctrl_flag &&
-				(mi_cfg->fod_hbm_enabled || 
-				 (mi_cfg->thermal_hbm_disabled && bl_lvl > 2047 && mi_cfg->last_bl_level > 0) || 
-				 (mi_cfg->hbm_enabled && !mi_cfg->hbm_brightness && !mi_cfg->thermal_hbm_disabled))) {
-				DSI_INFO("fod_hbm_enabled(%d), hbm_enabled(%d), thermal_hbm_disabled(%d), skip set backlight %d\n", 
-						mi_cfg->fod_hbm_enabled, mi_cfg->hbm_enabled, mi_cfg->thermal_hbm_disabled, bl_lvl);
-			} else if (mi_cfg->thermal_hbm_disabled && bl_lvl > 2047 && mi_cfg->last_bl_level == 0) {
+			    (mi_cfg->fod_hbm_enabled ||
+			     (mi_cfg->thermal_hbm_disabled && bl_lvl > 2047 &&
+			      mi_cfg->last_bl_level > 0) ||
+			     (mi_cfg->hbm_enabled && !mi_cfg->hbm_brightness &&
+			      !mi_cfg->thermal_hbm_disabled))) {
+				DSI_INFO(
+					"fod_hbm_enabled(%d), hbm_enabled(%d), thermal_hbm_disabled(%d), skip set backlight %d\n",
+					mi_cfg->fod_hbm_enabled,
+					mi_cfg->hbm_enabled,
+					mi_cfg->thermal_hbm_disabled, bl_lvl);
+			} else if (mi_cfg->thermal_hbm_disabled &&
+				   bl_lvl > 2047 &&
+				   mi_cfg->last_bl_level == 0) {
 				bl_lvl = 2047;
 				rc = dsi_panel_update_backlight(panel, bl_lvl);
 			} else {
@@ -1491,14 +1504,14 @@ static int dsi_panel_parse_misc_host_config(struct dsi_host_common_cfg *host,
 					"qcom,mdss-dsi-cphy-strength");
 
 	rc = utils->read_u32(utils->data, "qcom,mdss-dsi-dma-schedule-line",
-			&line_no);
+				  &line_no);
 	if (rc)
 		host->dma_sched_line = 0;
 	else
 		host->dma_sched_line = line_no;
 
 	rc = utils->read_u32(utils->data, "qcom,mdss-dsi-dma-schedule-window",
-				&window);
+				  &window);
 	if (rc)
 		host->dma_sched_window = 0;
 	else
@@ -1514,8 +1527,7 @@ static int dsi_panel_parse_misc_host_config(struct dsi_host_common_cfg *host,
 	}
 
 	DSI_DEBUG("[%s] DMA scheduling parameters Line: %d Window: %d\n", name,
-		host->dma_sched_line, host->dma_sched_window);
-
+			host->dma_sched_line, host->dma_sched_window);
 	return 0;
 }
 
@@ -3681,9 +3693,8 @@ int dsi_panel_parse_esd_reg_read_configs(struct dsi_panel *panel)
 
 	dsi_panel_parse_cmd_sets_sub(&esd_config->offset_cmd,
 				DSI_CMD_SET_PANEL_STATUS_OFFSET, utils);
-	if (!esd_config->offset_cmd.count) {
-		pr_err("no panel status offset command\n");
-	}
+	if (!esd_config->offset_cmd.count)
+		DSI_ERR("no panel status offset command\n");
 
 	dsi_panel_parse_cmd_sets_sub(&esd_config->status_cmd,
 				DSI_CMD_SET_PANEL_STATUS, utils);
@@ -3999,7 +4010,6 @@ struct dsi_panel *dsi_panel_get(struct device *parent,
 		goto error;
 
 	mutex_init(&panel->panel_lock);
-
 
 	return panel;
 error:
@@ -4687,7 +4697,7 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_NOLP);
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_NOLP cmd, rc=%d\n",
-			panel->name, rc);
+		       panel->name, rc);
 
 	mi_cfg->dimming_state = STATE_DIM_RESTORE;
 
@@ -4737,7 +4747,8 @@ int dsi_panel_prepare(struct dsi_panel *panel)
 	if (panel->lp11_init) {
 		rc = dsi_panel_reset(panel);
 		if (rc) {
-			pr_err("[%s] failed to reset panel, rc=%d\n", panel->name, rc);
+			DSI_ERR("[%s] failed to reset panel, rc=%d\n",
+				panel->name, rc);
 			goto error;
 		}
 	}
@@ -4898,7 +4909,6 @@ int dsi_panel_send_roi_dcs(struct dsi_panel *panel, int ctrl_idx,
 	}
 	DSI_DEBUG("[%s] send roi x %d y %d w %d h %d\n", panel->name,
 			roi->x, roi->y, roi->w, roi->h);
-	SDE_EVT32(roi->x, roi->y, roi->w, roi->h);
 
 	mutex_lock(&panel->panel_lock);
 
@@ -5011,14 +5021,14 @@ int dsi_panel_switch(struct dsi_panel *panel)
 
 	mutex_lock(&panel->panel_lock);
 
-	if (panel->mi_cfg.gir_enabled) {
-		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_TIMING_SWITCH_GIR_ON);
-	} else {
+	if (panel->mi_cfg.gir_enabled)
+		rc = dsi_panel_tx_cmd_set(panel,
+					  DSI_CMD_SET_TIMING_SWITCH_GIR_ON);
+	else
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_TIMING_SWITCH);
-	}
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_TIMING_SWITCH cmds, rc=%d\n",
-		       panel->name, rc);
+			panel->name, rc);
 
 	mutex_unlock(&panel->panel_lock);
 	display_utc_time_marker("DSI_CMD_SET_TIMING_SWITCH");
@@ -5095,9 +5105,8 @@ int dsi_panel_enable(struct dsi_panel *panel)
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_ON cmds, rc=%d\n",
 		       panel->name, rc);
-	else {
+	else
 		panel->panel_initialized = true;
-	}
 
 	if (mi_cfg->gamma_update_flag) {
 		if (mi_cfg->gamma_cfg.update_done_60hz &&
@@ -5416,7 +5425,7 @@ int dsi_panel_post_unprepare(struct dsi_panel *panel)
 	rc = dsi_panel_power_off(panel);
 	if (rc) {
 		DSI_ERR("[%s] panel power_Off failed, rc=%d\n",
-			panel->name, rc);
+		       panel->name, rc);
 		goto error;
 	}
 error:

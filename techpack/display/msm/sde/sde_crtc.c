@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2014-2021 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
  * Copyright (C) 2013 Red Hat
  * Author: Rob Clark <robdclark@gmail.com>
  *
@@ -3212,6 +3213,7 @@ static void sde_crtc_atomic_begin(struct drm_crtc *crtc,
 		if (encoder->crtc != crtc)
 			continue;
 
+		sde_encoder_trigger_rsc_state_change(encoder);
 		/* encoder will trigger pending mask now */
 		sde_encoder_trigger_kickoff_pending(encoder);
 	}
@@ -3242,9 +3244,8 @@ static void sde_crtc_atomic_begin(struct drm_crtc *crtc,
 		(g_panel->mi_cfg.panel_id != 0x4D38324100420200) &&
 		sde_encoder_check_curr_mode(sde_crtc->mixers[0].encoder,
 					MSM_DISPLAY_VIDEO_MODE) &&
-		kthread_cancel_delayed_work_sync(&sde_crtc->idle_notify_work)) {
+		kthread_cancel_delayed_work_sync(&sde_crtc->idle_notify_work))
 		SDE_DEBUG("idle notify work cancelled\n");
-	}
 
 	fm_stat.idle_status = false;
 
@@ -4861,15 +4862,7 @@ static int _sde_crtc_atomic_check_pstates(struct drm_crtc *crtc,
 			plane, multirect_plane, &cnt);
 	if (rc)
 		return rc;
-#if 0
-	/*
-	 * mi layer check
-	 *   need execute only sde_enc->disp_info.is_primary is true
-	*/
-	rc = sde_crtc_mi_atomic_check(sde_crtc, cstate, (void *)pstates, cnt);
-	if (rc)
-		return rc;
-#endif
+
 	/* assign mixer stages based on sorted zpos property */
 	rc = _sde_crtc_check_zpos(state, sde_crtc, pstates, cstate, mode, cnt);
 	if (rc)
@@ -5288,7 +5281,7 @@ static void sde_crtc_install_properties(struct drm_crtc *crtc,
 		return;
 	}
 
-	info = kzalloc(sizeof(struct sde_kms_info), GFP_KERNEL);
+	info = vzalloc(sizeof(struct sde_kms_info));
 	if (!info) {
 		SDE_ERROR("failed to allocate info memory\n");
 		return;
@@ -5539,12 +5532,12 @@ static void sde_crtc_install_properties(struct drm_crtc *crtc,
 				catalog->ubwc_bw_calc_version);
 
 	sde_kms_info_add_keyint(info, "use_baselayer_for_stage",
-			 catalog->has_base_layer);
+			catalog->has_base_layer);
 
 	msm_property_set_blob(&sde_crtc->property_info, &sde_crtc->blob_info,
 			info->data, SDE_KMS_INFO_DATALEN(info), CRTC_PROP_INFO);
 
-	kfree(info);
+	vfree(info);
 }
 
 static int _sde_crtc_get_output_fence(struct drm_crtc *crtc,
@@ -6484,6 +6477,7 @@ static void __sde_crtc_idle_notify_work(struct kthread_work *work)
 		msm_mode_object_event_notify(&crtc->base, crtc->dev,
 				&event, (u8 *)&ret);
 		fm_stat.idle_status = true;
+
 		SDE_DEBUG("crtc[%d]: idle timeout notified\n", crtc->base.id);
 	}
 }

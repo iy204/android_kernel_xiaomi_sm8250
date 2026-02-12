@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
- * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
  */
 
 #ifndef _DSI_DEFS_H_
@@ -597,10 +597,10 @@ struct dsi_split_link_config {
  * @dsi_split_link_config:  Split Link Configuration.
  * @byte_intf_clk_div:   Determines the factor for calculating byte intf clock.
  * @dma_sched_line:      Line at which dma command gets triggered. In case of
- *			video mode it is the line number after vactive and for
- *			cmd it points to the line after TE.
- * @dma_sched_window:	Determines the width of the window during the
- *			DSI command will be sent by the HW.
+ *			 video mode it is the line number after vactive and for
+ *			 cmd it points to the line after TE.
+ * @dma_sched_window:	 Determines the width of the window during the
+ *			 DSI command will be sent by the HW.
  */
 struct dsi_host_common_cfg {
 	enum dsi_pixel_format dst_format;
@@ -627,10 +627,10 @@ struct dsi_host_common_cfg {
 	enum dsi_phy_type phy_type;
 	struct dsi_split_link_config split_link;
 	u32 byte_intf_clk_div;
-	u32 clk_strength;
-	bool cphy_strength;
 	u32 dma_sched_line;
 	u32 dma_sched_window;
+	u32 clk_strength;
+	bool cphy_strength;
 	u32 phy_voltage;
 };
 

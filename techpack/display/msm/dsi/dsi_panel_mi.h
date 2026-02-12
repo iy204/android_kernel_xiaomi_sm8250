@@ -38,6 +38,9 @@
 
 #define MAX_VSYNC_COUNT                   200
 
+extern ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd, const void *data, size_t len);
+extern struct frame_stat fm_stat;
+
 enum doze_bkl {
 	DOZE_TO_NORMAL = 0,
 	DOZE_BRIGHTNESS_HBM,
