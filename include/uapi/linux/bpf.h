@@ -4239,6 +4239,9 @@ struct bpf_tcp_sock {
 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
+	__u32 sk_uid;
+	__u32 voip_daddr;
+	__u32 voip_dport;
 };
 
 struct bpf_sock_tuple {
@@ -4735,6 +4738,8 @@ enum {
 					 * has already been written
 					 * by the kernel or the
 					 * earlier bpf-progs.
+					 */
+	BPF_SOCK_OPS_VOIP_CB,		/* Called on every udp states.
 					 */
 };
 
