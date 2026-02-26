@@ -22,6 +22,16 @@ on:
           - enuma
           - dagu
           - pipa
+
+      script:
+        description: 'Select Build Script'
+        required: true
+        default: 'build.sh'
+        type: choice
+        options:
+          - build.sh
+          - build-miui.sh
+
       ksu:
         description: 'Enable KernelSU (SukiSU & SUSFS)'
         required: true
@@ -30,17 +40,16 @@ on:
 
 jobs:
   build:
-    name: Build Kernel for ${{ inputs.device }} (${{ ( github.event.inputs.ksu == 'true' && 'KSU' ) || 'NoKSU' }})
+    name: Build Kernel for ${{ inputs.device }} (${{ inputs.script }}) (${{ inputs.ksu && 'KSU' || 'NoKSU' }})
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Source
       uses: actions/checkout@v6
       with:
-        fetch-depth: 1 # 需要完整的 commit 历史来生成版本号
+        fetch-depth: 1
 
     - name: Cleanup Disk Space
-      # 内核编译不需要特别大的空间，但为了保险起见，清理一些预装软件
       run: |
         sudo rm -rf /usr/share/dotnet
         sudo rm -rf /opt/ghc
@@ -48,7 +57,6 @@ jobs:
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
     - name: Install Dependencies
-      # 对应 README 中的手动构建依赖
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential git curl wget bison flex zip bc cpio libssl-dev ccache python-is-python3
@@ -58,13 +66,13 @@ jobs:
       uses: actions/cache@v5
       with:
         path: ~/.cache/ccache_mikernel
-        key: kernel-ccache-${{ inputs.device }}-${{ github.run_id }}
+        key: kernel-ccache-${{ inputs.device }}-${{ inputs.script }}-${{ github.run_id }}
         restore-keys: |
+          kernel-ccache-${{ inputs.device }}-${{ inputs.script }}-
           kernel-ccache-${{ inputs.device }}-
           kernel-ccache-
 
     - name: Setup Toolchain (ZyC-Clang 15)
-      # 对应 Manual Build 第 2 步
       run: |
         mkdir -p $HOME/zyc-clang
         cd $HOME/zyc-clang
@@ -73,19 +81,21 @@ jobs:
 
     - name: Build Kernel
       run: |
-        chmod +x build.sh
+        chmod +x build.sh build-miui.sh
         
+        echo "Using script: ${{ inputs.script }}"
+
         if [ "${{ inputs.ksu }}" == "true" ]; then
           echo "Building with KernelSU..."
-          bash build.sh ${{ inputs.device }} ksu
+          bash ${{ inputs.script }} ${{ inputs.device }} ksu
         else
           echo "Building without KernelSU..."
-          bash build.sh ${{ inputs.device }}
+          bash ${{ inputs.script }} ${{ inputs.device }}
         fi
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v6
       with:
-        name: Kernel-${{ inputs.device }}-${{ ( github.event.inputs.ksu == 'true' && 'KSU' ) || 'NoKSU' }}-${{ github.run_number }}
+        name: Kernel-${{ inputs.device }}-${{ inputs.script }}-${{ inputs.ksu && 'KSU' || 'NoKSU' }}-${{ github.run_number }}
         path: ./*.zip
         if-no-files-found: error
