@@ -183,6 +183,9 @@ if [ $KSU_ENABLE -eq 1 ]; then
     scripts/config --file out/.config \
     -e KSU \
     -e KSU_MANUAL_HOOK \
+    -e KSU_MANUAL_HOOK_AUTO_SETUID_HOOK \
+    -e KSU_MANUAL_HOOK_AUTO_INITRC_HOOK \
+    -e KSU_MANUAL_HOOK_AUTO_INPUT_HOOK \
     -e KPM
 else
     scripts/config --file out/.config -d KSU
