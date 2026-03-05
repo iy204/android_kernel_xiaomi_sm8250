@@ -16,27 +16,7 @@
 
 
 static uint __read_mostly compression_level = 1;
-int set_compression_level(const char *val, const struct kernel_param *kp)
-{
- 	int temp, ret;
- 
- 	ret = sscanf(val, "%i", &temp);
- 	if (ret == -EINVAL) {
- 		return -EINVAL;
- 	}
- 
- 	if (temp == 0) {
- 		temp = 1;
- 	} else if (temp > zstd_max_clevel()) {
- 		temp = zstd_max_clevel();
- 	}
- 
- 	*((int *)kp->arg) = temp;
- 
- 	return 0;
-}
- 
-module_param_call(compression_level, set_compression_level, param_get_int, &compression_level, 0644);
+module_param(compression_level, uint, 0644);
 
 struct zstd_ctx {
 	zstd_cctx *cctx;
