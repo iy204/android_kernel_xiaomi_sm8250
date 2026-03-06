@@ -1290,7 +1290,7 @@ struct page *f2fs_find_data_page(struct inode *inode, pgoff_t index)
 	struct address_space *mapping = inode->i_mapping;
 	struct page *page;
 
-	page = find_get_page(mapping, index);
+	page = find_get_page_flags(mapping, index, FGP_ACCESSED);
 	if (page && PageUptodate(page))
 		return page;
 	f2fs_put_page(page, 0);
@@ -4001,7 +4001,7 @@ static int check_swap_activate(struct swap_info_struct *sis,
 
 		cond_resched();
 
-		first_block = bmap(inode, probe_block);
+		first_block = bmap(inode, &probe_block);
 		if (first_block == 0)
 			goto bad_bmap;
 
@@ -4017,7 +4017,7 @@ static int check_swap_activate(struct swap_info_struct *sis,
 					block_in_page++) {
 			sector_t block;
 
-			block = bmap(inode, probe_block + block_in_page);
+			block = bmap(inode, &probe_block + block_in_page);
 			if (block == 0)
 				goto bad_bmap;
 			if (block != first_block + block_in_page) {
