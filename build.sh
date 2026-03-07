@@ -153,7 +153,7 @@ find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + >out/arch/arm64/boot/d
 
 rm -rf anykernel/kernels/
 
-mkdir -p anykernel/kernels/
+mkdir -p anykernel/kernels/aosp/
 
 # Patch for SukiSU KPM support. 
 if [ $KSU_ENABLE -eq 1 ]; then
@@ -166,8 +166,9 @@ if [ $KSU_ENABLE -eq 1 ]; then
     cd -
 fi
 
-cp out/arch/arm64/boot/Image anykernel/kernels/
-cp out/arch/arm64/boot/dtb anykernel/kernels/
+cp out/arch/arm64/boot/Image anykernel/kernels/aosp/
+cp out/arch/arm64/boot/dtb anykernel/kernels/aosp/
+cp out/arch/arm64/boot/dtbo.img anykernel/kernels/aosp/
 
 cd anykernel 
 
@@ -322,7 +323,7 @@ rm -rf ${dts_source}
 mv .dts.bak ${dts_source}
 
 rm -rf anykernel/kernels/
-mkdir -p anykernel/kernels/
+mkdir -p anykernel/kernels/miui/
 
 # Patch for SukiSU KPM support. 
 if [ $KSU_ENABLE -eq 1 ]; then
@@ -335,8 +336,9 @@ if [ $KSU_ENABLE -eq 1 ]; then
     cd -
 fi
 
-cp out/arch/arm64/boot/Image anykernel/kernels/
-cp out/arch/arm64/boot/dtb anykernel/kernels/
+cp out/arch/arm64/boot/Image anykernel/kernels/miui/
+cp out/arch/arm64/boot/dtb anykernel/kernels/miui/
+cp out/arch/arm64/boot/dtbo.img anykernel/kernels/miui/
 
 echo "Build for MIUI finished."
 
