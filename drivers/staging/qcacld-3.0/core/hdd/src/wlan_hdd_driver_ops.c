@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2015-2020 The Linux Foundation. All rights reserved.
- * Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -663,6 +662,7 @@ static int __hdd_soc_recovery_reinit(struct device *dev,
 	}
 
 	hdd_soc_load_unlock(dev);
+	hdd_start_complete(0);
 
 	return 0;
 
@@ -713,7 +713,6 @@ static int hdd_soc_recovery_reinit(struct device *dev,
 
 
 	osif_psoc_sync_trans_stop(psoc_sync);
-	hdd_start_complete(0);
 
 	return errno;
 }
