@@ -138,6 +138,10 @@ else
     scripts/config --file out/.config -d KSU
 fi
 
+scripts/config --file out/.config \
+    -e CONFIG_REKERNEL \
+    -e CONFIG_REKERNEL_NETWORK \
+
 make $MAKE_ARGS -j$(nproc)
 
 
