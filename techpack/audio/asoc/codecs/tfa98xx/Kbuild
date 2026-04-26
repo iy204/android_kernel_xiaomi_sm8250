@@ -63,12 +63,12 @@ endif
 
 ############ UAPI ############
 UAPI_DIR :=	uapi
-UAPI_INC :=	-I$(AUDIO_ROOT)/include/$(UAPI_DIR)
+UAPI_INC :=	-I $(srctree)/$(AUDIO_ROOT)/include/$(UAPI_DIR)
 
 ############ COMMON ############
 COMMON_DIR :=	include
-COMMON_INC :=	-I$(AUDIO_ROOT)/$(COMMON_DIR)
-TFA_INC    :=   -I$(AUDIO_ROOT)/asoc/codecs/tfa98xx/inc
+COMMON_INC :=	-I $(srctree)/$(AUDIO_ROOT)/$(COMMON_DIR)
+TFA_INC    :=   -I $(srctree)/$(AUDIO_ROOT)/asoc/codecs/tfa98xx/inc
 
 # for TFA9874 Amplifer
 ifdef CONFIG_SND_SOC_TFA9874
