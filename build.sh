@@ -298,6 +298,7 @@ scripts/config --file out/.config \
     -e PERF_HUMANTASK \
     -d LTO_CLANG \
     -e LTO_NONE \
+    -d SHADOW_CALL_STACK \
     -e SF_BINDER \
     -e XIAOMI_MIUI \
     -d MI_MEMORY_SYSFS \
