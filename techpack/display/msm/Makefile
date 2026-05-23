@@ -38,7 +38,6 @@ msm_drm-$(CONFIG_DRM_MSM_SDE) += sde/sde_crtc.o \
 	sde/clone_cooling_device.o \
 	sde/sde_color_processing.o \
 	sde/sde_vbif.o \
-	xiaomi_frame_stat.o \
 	sde_io_util.o \
 	sde/sde_hw_reg_dma_v1_color_proc.o \
 	sde/sde_hw_color_proc_v4.o \
@@ -118,8 +117,7 @@ msm_drm-$(CONFIG_DRM_MSM) += \
 	msm_gem_vma.o \
 	msm_smmu.o \
 	msm_prop.o \
-	msm_notifier.o \
-        dsi/exposure_adjustment.o
+	msm_notifier.o\
 
 obj-$(CONFIG_DRM_MSM)	+= msm_drm.o
 
