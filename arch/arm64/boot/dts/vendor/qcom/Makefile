@@ -1,5 +1,5 @@
-ifeq ($(CONFIG_BOARD_XIAOMI),y)
-ifeq ($(CONFIG_BOARD_XIAOMI_SM8250),y)
+ifeq ($(CONFIG_MACH_XIAOMI),y)
+ifeq ($(CONFIG_MACH_XIAOMI_SM8250),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 
 ifeq ($(CONFIG_BOARD_ALIOTH),y)
@@ -83,7 +83,7 @@ endif
 endif
 endif
 
-ifeq ($(CONFIG_BOARD_XIAOMI_SM7250),y)
+ifeq ($(CONFIG_MACH_XIAOMI_SM7250),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 
 ifeq ($(CONFIG_BOARD_MONET),y)
