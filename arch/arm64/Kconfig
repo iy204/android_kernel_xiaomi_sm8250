@@ -1766,7 +1766,7 @@ endif
 
 config HWCONF_MANAGER
 	bool "Hardware configuration and monitor information"
-	default y if BOARD_XIAOMI
+	default y if MACH_XIAOMI
 	help
 	  It provides all kinds of components configuration information and
 	  monitor values.
