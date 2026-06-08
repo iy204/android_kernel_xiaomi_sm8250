@@ -148,7 +148,6 @@ if [ $KSU_ENABLE -eq 1 ]; then
     -e KSU_SUSFS_OPEN_REDIRECT \
     -e KSU_SUSFS_SUS_MAP \
     -e KSU_MULTI_MANAGER_SUPPORT \
-    -e KPM
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -176,17 +175,6 @@ find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + >out/arch/arm64/boot/d
 rm -rf anykernel/kernels/
 
 mkdir -p anykernel/kernels/aosp/
-
-# Patch for SukiSU KPM support. 
-if [ $KSU_ENABLE -eq 1 ]; then
-    cd out/arch/arm64/boot/
-    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
-    chmod +x patch_linux
-    ./patch_linux
-    rm Image
-    mv oImage Image
-    cd -
-fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/aosp/
 cp out/arch/arm64/boot/dtb anykernel/kernels/aosp/
@@ -291,7 +279,6 @@ if [ $KSU_ENABLE -eq 1 ]; then
     -e KSU_SUSFS_OPEN_REDIRECT \
     -e KSU_SUSFS_SUS_MAP \
     -e KSU_MULTI_MANAGER_SUPPORT \
-    -e KPM
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -346,17 +333,6 @@ mv .dts.bak ${dts_source}
 
 rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/miui/
-
-# Patch for SukiSU KPM support. 
-if [ $KSU_ENABLE -eq 1 ]; then
-    cd out/arch/arm64/boot/
-    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
-    chmod +x patch_linux
-    ./patch_linux
-    rm Image
-    mv oImage Image
-    cd -
-fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/miui/
 cp out/arch/arm64/boot/dtb anykernel/kernels/miui/
